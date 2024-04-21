@@ -1,1 +1,26 @@
+--This query aims to create or alter a view that provides a consolidated and filtered view of customer demographics specifically for customers from Dalton and Florida
 
+--1. Create a view for profile data on customers who live in Dalton to send targeted email
+
+
+CREATE OR ALTER VIEW CustDemoDalton AS
+SELECT Customers.FirstName, Customers.LastName,
+	Demographics.Gender, Demographics.Profession,
+	Demographics.HouseholdIncome, Demographics.HouseholdSize,
+	Demographics.Birthdate, Demographics.ChildUnder18
+FROM Customers
+JOIN Demographics
+ON Customers.CustomerId = Demographics.CustDemoID
+WHERE Customers.City = 'Dalton'
+
+
+--2. Create a view for profile data on customers who live in Florida who have ordered for themselves using their primary address to send targeted email
+
+CREATE OR ALTER VIEW CustPrimaryAddress_FL AS
+SELECT Customers.FirstName, Customers.Lastname,
+	ShippingInfo.StreetAddress, ShippingInfo.City,
+	ShippingInfo.State, ShippingInfo.Zipcode
+FROM Customers
+JOIN ShippingInfo
+ON Customers.CustomerID = ShippingInfo.CustID
+WHERE ShippingInfo.PrimaryAdd = 'Y' AND State = 'FL'
